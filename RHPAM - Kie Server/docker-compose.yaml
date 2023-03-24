@@ -1,0 +1,59 @@
+version: '3'
+services:
+  kie-server:
+    image: quay.io/rutvikpanchal-nvs/rhpam-customized-kieserver:latest
+    container_name: kie-server
+    ports:
+      - '8080:8080'
+    environment:
+      # Credentials
+      KIE_ADMIN_USER: admin
+      KIE_ADMIN_PWD: password
+
+      # Maven Mirror Config:
+      # MAVEN_MIRROR_URL: http://nexus:8081/repository/maven-central/
+
+      # KJar Config
+      KIE_SERVER_CONTAINER_DEPLOYMENT: 'custom_sample_1.0.0=org.kie:custom-sample:1.0.0'
+      MAVEN_REPO_URL: 'http://nexus:8081/repository/maven-releases/'
+      MAVEN_REPO_ID: nexus
+      MAVEN_REPO_USERNAME: admin
+      MAVEN_REPO_PASSWORD: password
+
+      # Database Config
+      KIE_SERVER_PERSISTENCE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      RHPAM_DRIVER: postgresql
+      RHPAM_SERVICE_HOST: postgres
+      RHPAM_SERVICE_PORT: 5432
+      RHPAM_USERNAME: admin
+      RHPAM_PASSWORD: password
+      RHPAM_DATABASE: rhpam
+      KIE_SERVER_PERSISTENCE_SCHEMA: rhpam
+      DATASOURCES: RHPAM
+      KIE_SERVER_PERSISTENCE_DS: java:/jboss/datasources/rhpam
+      
+      # AMQ Config
+      MQ_SERVICE_PREFIX_MAPPING: msg-broker-amq7=AMQ
+      AMQ_PROTOCOL: tcp
+      AMQ_USERNAME: admin
+      AMQ_PASSWORD: password
+      KIE_SERVER_EXECUTOR_JMS: 'true'
+      KIE_SERVER_EXECUTOR_JMS_TRANSACTED: 'true'
+      KIE_SERVER_JMS_ENABLE_SIGNAL: 'true'
+      KIE_SERVER_JMS_ENABLE_AUDIT: 'true'
+      KIE_SERVER_JMS_QUEUE_EXECUTOR: queue/KIE.SERVER.EXECUTOR
+      KIE_SERVER_JMS_QUEUE_REQUEST: queue/KIE.SERVER.REQUEST
+      KIE_SERVER_JMS_QUEUE_RESPONSE: queue/KIE.SERVER.RESPONSE
+      KIE_SERVER_JMS_QUEUE_SIGNAL: queue/KIE.SERVER.SIGNAL
+      KIE_SERVER_JMS_QUEUE_AUDIT: queue/KIE.SERVER.AUDIT
+      EJB_RESOURCE_ADAPTER_NAME: activemq-ra-remote
+      AMQ_QUEUES: >-
+        queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE,
+        queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT
+    networks:
+    - master
+networks:
+  master:
+    external: true
+
+# Env Vars: https://access.redhat.com/documentation/en-us/red_hat_process_automation_manager/7.12/html/deploying_red_hat_process_automation_manager_on_red_hat_openshift_container_platform/template-overview-con_openshift-templates#image_environment_variables_5

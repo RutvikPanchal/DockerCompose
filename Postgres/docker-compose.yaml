@@ -1,0 +1,19 @@
+version: '3'
+services:
+  postgres:
+    image: registry.redhat.io/rhel8/postgresql-13:latest
+    container_name: postgres
+    ports:
+      - '4321:5432'
+    environment:
+      POSTGRESQL_USER: admin
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_ADMIN_PASSWORD: password
+      POSTGRESQL_DATABASE: rhpam
+    networks:
+        - master
+networks:
+  master:
+    external: true
+
+# Env Vars: https://catalog.redhat.com/software/containers/rhel8/postgresql-13/5ffdbdef73a65398111b8362?container-tabs=overview
