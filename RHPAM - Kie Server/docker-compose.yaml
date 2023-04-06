@@ -1,7 +1,7 @@
 version: '3'
 services:
   kie-server:
-    image: quay.io/rutvikpanchal-nvs/rhpam-customized-kieserver:latest
+    image: registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.10.1
     container_name: kie-server
     ports:
       - '8080:8080'
@@ -10,46 +10,48 @@ services:
       KIE_ADMIN_USER: admin
       KIE_ADMIN_PWD: password
 
+      # KIE_SERVER_STARTUP_STRATEGY: OpenShiftStartupStrategy
+      
       # Maven Mirror Config:
-      # MAVEN_MIRROR_URL: http://nexus:8081/repository/maven-central/
+      MAVEN_MIRROR_URL: http://nexus:8081/repository/maven-public/
 
       # KJar Config
-      KIE_SERVER_CONTAINER_DEPLOYMENT: 'custom_sample_1.0.0=org.kie:custom-sample:1.0.0'
+      KIE_SERVER_CONTAINER_DEPLOYMENT: 'sample_1.0.0=org.kie:sample:1.0.0'
       MAVEN_REPO_URL: 'http://nexus:8081/repository/maven-releases/'
       MAVEN_REPO_ID: nexus
       MAVEN_REPO_USERNAME: admin
       MAVEN_REPO_PASSWORD: password
 
       # Database Config
-      KIE_SERVER_PERSISTENCE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       RHPAM_DRIVER: postgresql
       RHPAM_SERVICE_HOST: postgres
       RHPAM_SERVICE_PORT: 5432
       RHPAM_USERNAME: admin
       RHPAM_PASSWORD: password
-      RHPAM_DATABASE: rhpam
-      KIE_SERVER_PERSISTENCE_SCHEMA: rhpam
+      RHPAM_DATABASE: docker
       DATASOURCES: RHPAM
+      KIE_SERVER_PERSISTENCE_SCHEMA: rhpam
+      KIE_SERVER_PERSISTENCE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
       KIE_SERVER_PERSISTENCE_DS: java:/jboss/datasources/rhpam
       
       # AMQ Config
-      MQ_SERVICE_PREFIX_MAPPING: msg-broker-amq7=AMQ
-      AMQ_PROTOCOL: tcp
+      MQ_SERVICE_PREFIX_MAPPING: docker=AMQ
       AMQ_USERNAME: admin
       AMQ_PASSWORD: password
+      AMQ_PROTOCOL: tcp
+      DOCKER_TCP_SERVICE_HOST: active-mq
+      DOCKER_TCP_SERVICE_PORT: 61616
       KIE_SERVER_EXECUTOR_JMS: 'true'
       KIE_SERVER_EXECUTOR_JMS_TRANSACTED: 'true'
       KIE_SERVER_JMS_ENABLE_SIGNAL: 'true'
       KIE_SERVER_JMS_ENABLE_AUDIT: 'true'
-      KIE_SERVER_JMS_QUEUE_EXECUTOR: queue/KIE.SERVER.EXECUTOR
       KIE_SERVER_JMS_QUEUE_REQUEST: queue/KIE.SERVER.REQUEST
       KIE_SERVER_JMS_QUEUE_RESPONSE: queue/KIE.SERVER.RESPONSE
+      KIE_SERVER_JMS_QUEUE_EXECUTOR: queue/KIE.SERVER.EXECUTOR
       KIE_SERVER_JMS_QUEUE_SIGNAL: queue/KIE.SERVER.SIGNAL
       KIE_SERVER_JMS_QUEUE_AUDIT: queue/KIE.SERVER.AUDIT
+      AMQ_QUEUES: queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE, queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT
       EJB_RESOURCE_ADAPTER_NAME: activemq-ra-remote
-      AMQ_QUEUES: >-
-        queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE,
-        queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT
     networks:
     - master
 networks:
