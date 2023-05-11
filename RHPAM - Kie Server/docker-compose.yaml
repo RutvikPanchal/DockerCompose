@@ -35,12 +35,12 @@ services:
       KIE_SERVER_PERSISTENCE_DS: java:/jboss/datasources/rhpam
       
       # AMQ Config
-      MQ_SERVICE_PREFIX_MAPPING: docker=AMQ
+      MQ_SERVICE_PREFIX_MAPPING: docker_amq7=AMQ
       AMQ_USERNAME: admin
       AMQ_PASSWORD: password
-      AMQ_PROTOCOL: tcp
-      DOCKER_TCP_SERVICE_HOST: active-mq
-      DOCKER_TCP_SERVICE_PORT: 61616
+      AMQ_PROTOCOL: openwire
+      DOCKER_AMQ_TCP_SERVICE_HOST: active-mq
+      DOCKER_AMQ_TCP_SERVICE_PORT: 61616
       KIE_SERVER_EXECUTOR_JMS: 'true'
       KIE_SERVER_EXECUTOR_JMS_TRANSACTED: 'true'
       KIE_SERVER_JMS_ENABLE_SIGNAL: 'true'

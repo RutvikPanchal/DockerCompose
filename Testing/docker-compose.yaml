@@ -2,10 +2,10 @@ version: '3'
 services:
   active-mq:
     image: registry.redhat.io/amq7/amq-broker-rhel8:7.10
-    container_name: active-mq
+    container_name: test
     ports:
-      - '8161:8161'
-      - '61616:61616'
+      - '8162:8161'
+      - '61617:61616'
     environment:
       AMQ_USER: 'admin'
       AMQ_PASSWORD: 'password'

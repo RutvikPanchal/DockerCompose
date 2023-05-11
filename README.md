@@ -22,6 +22,8 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 <br/>
 
 ```
-1.) Use the Docker Desktop app to see all the set environment variables. It's located under Pod > Inspect Tab
+1.) Docker uses the name of the parent directory of docker-compose.yaml as the name of compose project
+
+2.) Use the Docker Desktop app to see all the set environment variables. It's located under Pod > Inspect Tab
     - It probably uses printenv to get a list of all the set environment variables
 ```
