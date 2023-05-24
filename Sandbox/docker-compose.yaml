@@ -10,15 +10,8 @@ services:
       AMQ_USER: 'admin'
       AMQ_PASSWORD: 'password'
       AMQ_QUEUES: 'queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE, queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT'
-      # AMQ_ADDRESSES: 'queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE, queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT'
-      # BROKER_XML: true
-      # CONFIG_INSTANCE_DIR: '/etc/broker.xml'
-      # AMQ_PROTOCOL: openwire
     networks:
     - master
 networks:
   master:
     external: true
-
-# ActiveMQ Instance location: /home/jboss/broker
-# Docs: https://access.redhat.com/documentation/en-us/red_hat_amq/7.7

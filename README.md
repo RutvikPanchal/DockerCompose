@@ -1,7 +1,31 @@
 # DockerCompose
+
 A collection of docker-compose.yaml files to quickly spin up pods in Docker Desktop as a Sandbox Environment for Testing
 
 <br/>
+
+## Development Setup
+
+1.) Install Docker Desktop
+
+2.) Log in with Docker account
+
+3.) Log in with Redhat account `docker login -u -p registry.redhat.io`
+
+4.) `docker network create master`
+
+<br />
+
+## Network Ports
+
+**NOTE (Windows) :** run `netstat -ano` on a terminal to see all in use ports
+
+| Application | Ports ↓ |
+| --- | --- |
+| Postgres | 4321 |
+| Nexus | 8081 |
+| RHPAM - Kie Server | 8083 |
+| ActiveMQ | 8161 <br /> 61616 |
 
 ## Apps
 <br/>
