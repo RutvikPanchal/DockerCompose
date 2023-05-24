@@ -1,0 +1,17 @@
+version: '3'
+services:
+  active-mq:
+    image: registry.redhat.io/amq7/amq-broker-rhel8:7.10
+    container_name: test
+    ports:
+      - '8162:8161'
+      - '61617:61616'
+    environment:
+      AMQ_USER: 'admin'
+      AMQ_PASSWORD: 'password'
+      AMQ_QUEUES: 'queue/KIE.SERVER.EXECUTOR, queue/KIE.SERVER.REQUEST, queue/KIE.SERVER.RESPONSE, queue/KIE.SERVER.SIGNAL, queue/KIE.SERVER.AUDIT'
+    networks:
+    - master
+networks:
+  master:
+    external: true
