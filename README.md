@@ -30,7 +30,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 ## Apps
 <br/>
 
-1.) **Artemis ActiveMQ Server** - Basic Artemis ActiveMQ server
+1.) **ActiveMQ Artemis** - Basic Artemis ActiveMQ server
 
 2.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
