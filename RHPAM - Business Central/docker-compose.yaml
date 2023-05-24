@@ -1,0 +1,16 @@
+version: '3'
+services:
+  business-central:
+    image: registry.redhat.io/rhpam-7/rhpam-businesscentral-rhel8:7.13.2
+    container_name: business-central
+    ports:
+      - '8082:8080'
+    environment:
+      # Credentials
+      KIE_ADMIN_USER: admin
+      KIE_ADMIN_PWD: password
+    networks:
+    - master
+networks:
+  master:
+    external: true
