@@ -22,6 +22,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 | Application | Ports ↓ |
 | --- | --- |
+| Kafka | 2181 <br /> 9000 <br /> 9092 |
 | Postgres | 4321 |
 | Nexus | 8081 |
 | RHPAM - Business Central | 8082 |
