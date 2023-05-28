@@ -1,0 +1,45 @@
+version: '3'
+services:
+  kie-server-customized:
+    image: registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.13.2
+    container_name: kie-server-customized
+    ports:
+      - '8084:8080'
+      - '8447:8443'
+    environment:
+      # Credentials
+      KIE_ADMIN_USER: admin
+      KIE_ADMIN_PWD: password
+
+      # Database Config
+      RHPAM_DRIVER: postgresql
+      RHPAM_SERVICE_HOST: postgres
+      RHPAM_SERVICE_PORT: 5432
+      RHPAM_USERNAME: admin
+      RHPAM_PASSWORD: password
+      RHPAM_DATABASE: docker
+      DATASOURCES: RHPAM
+      KIE_SERVER_PERSISTENCE_SCHEMA: rhpam
+      KIE_SERVER_PERSISTENCE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      KIE_SERVER_PERSISTENCE_DS: java:/jboss/datasources/rhpam
+
+      # HTTPS
+      HTTPS_KEYSTORE_DIR: /etc/certificate
+      HTTPS_KEYSTORE: sandbox.jks
+      HTTPS_NAME: sandbox
+      HTTPS_PASSWORD: password
+
+      #MISC
+      ENABLE_JSON_LOGGING: false
+    volumes:
+      - type: bind
+        source: ./mounts/sandbox.jks
+        target: /etc/certificate/sandbox.jks
+      - type: bind
+        source: ./mounts/kie-server-extension-1.0.0.jar
+        target: /opt/eap/standalone/deployments/ROOT.war/WEB-INF/lib/kie-server-extension-1.0.0.jar
+    networks:
+    - master
+networks:
+  master:
+    external: true
