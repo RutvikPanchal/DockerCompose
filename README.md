@@ -43,7 +43,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 6.) **RHPAM Kie Server** - A RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
 
-6.) **RHPAM Kie Server (Customized)** - A Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
+7.) **RHPAM Kie Server (Customized)** - A Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
 
 <br/>
 
