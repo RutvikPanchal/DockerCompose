@@ -36,6 +36,21 @@ services:
         source: ./mounts/sandbox.jks
         target: /etc/certificate/sandbox.jks
       - type: bind
+        source: ./mounts/web.xml
+        target: /deployments/ROOT.war/WEB-INF/web.xml
+      - type: bind
+        source: ./mounts/jwt-generator-1.0.0.jar
+        target: /opt/eap/custom/jwt-generator-1.0.0.jar
+      - type: bind
+        source: ./mounts/postconfigure.sh
+        target: /opt/eap/extensions/postconfigure.sh
+      - type: bind
+        source: ./mounts/delayedpostconfigure.sh
+        target: /opt/eap/extensions/delayedpostconfigure.sh
+      - type: bind
+        source: ./mounts/jboss-cli-actions.sh
+        target: /opt/eap/extensions/jboss-cli-actions.sh
+      - type: bind
         source: ./mounts/kie-server-extension-1.0.0.jar
         target: /opt/eap/standalone/deployments/ROOT.war/WEB-INF/lib/kie-server-extension-1.0.0.jar
     networks:
