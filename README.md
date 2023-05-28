@@ -18,12 +18,13 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 ## Network Ports
 
-**NOTE (Windows) :** run `netstat -ano` on a terminal to see all in use ports
+**NOTE (Windows) :** run `netstat -ano` on a terminal to see all the in use ports
 
 | Application | Ports ↓ |
 | --- | --- |
 | Postgres | 4321 |
 | Nexus | 8081 |
+| RHPAM - Business Central | 8082 |
 | RHPAM - Kie Server | 8083 |
 | ActiveMQ | 8161 <br /> 61616 |
 
@@ -38,7 +39,9 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 4.) **Postgres** - A basic PostgreSQL **Database** server
 
-5.) **RHPAM Kie Server** - A RedHat Process Automation Manager Kie Server Immutable instance which depends on ***AMQ Broker***, **Postgres** and **Nexus**
+5.) **RHPAM Business Central** - A RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
+
+6.) **RHPAM Kie Server** - A RedHat Process Automation Manager Kie Server Immutable instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
 
 <br/>
 

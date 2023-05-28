@@ -11,3 +11,7 @@ services:
 networks:
   master:
     external: true
+
+# docker compose up -d
+# cat /nexus-data/admin.password
+# login and change admin password to "password"
