@@ -1,5 +1,10 @@
+## 1.2.1
+- RHPAM - Kie Server - Customized
+  - added a script to generate jars from the included java projects
+  - bug fixes & fine tuning
+
 ## 1.2.0
-- Added RHPAM - Kie Server Customized docker-compose
+- Added RHPAM - Kie Server - Customized docker-compose
   - configured a HTTPS endpoint using a self signed certificate (sandbox.jks)
   - added kie-server-extension jar file and project which adds a custom kie-server endpoint with user-defined behavior
   - added jwt_generator project to generate jwt tokens using sandbox.jks cert for testing the now secured kie-server
