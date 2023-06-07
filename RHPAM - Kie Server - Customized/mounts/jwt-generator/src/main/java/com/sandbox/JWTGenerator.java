@@ -34,7 +34,7 @@ public class JWTGenerator
                         .claim("user", user)
                         .setSubject(subjectName)
                         .setNotBefore(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + (tokenDuration * 1000)))
+                        .setExpiration(new Date(System.currentTimeMillis() + (tokenDuration * 1000L)))
                         .signWith(key, SignatureAlgorithm.RS256)
                         .compact();
         return jwt;
