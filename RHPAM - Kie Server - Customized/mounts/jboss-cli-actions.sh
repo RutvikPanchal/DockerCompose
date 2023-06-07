@@ -1,7 +1,7 @@
 embed-server --std-out=echo --server-config=standalone-openshift.xml
 batch
-/subsystem=logging/logger=org.wildfly.security:add(level=ALL)
-/subsystem=logging/logger=org.wildfly.elytron:add(level=ALL)
+/subsystem=logging/logger=org.wildfly.security:add(level=INFO)
+/subsystem=logging/logger=org.wildfly.elytron:add(level=INFO)
 module add --name=jwt-role-decoder --resources=/opt/eap/custom/jwt-generator-1.0.0.jar --dependencies=org.slf4j,org.wildfly.security.elytron
 /subsystem=elytron/custom-role-decoder=jwtDecoder:add(class-name="com.sandbox.CustomRoleDecoder", module="jwt-role-decoder")
 /subsystem=elytron/key-store=jwt-key-store:add(type="JKS", path="/etc/certificate/sandbox.jks", credential-reference={clear-text="password"})
