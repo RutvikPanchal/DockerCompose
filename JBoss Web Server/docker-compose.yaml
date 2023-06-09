@@ -5,13 +5,27 @@ services:
     container_name: jboss-web-server
     ports:
       - '8086:8080'
-    environment:
-      # Credentials
-      APPLICATION_NAME: sandbox
+    environment:      
+      # DB Config - Either use Env vars or the context.xml volume mount
+      # DB_SERVICE_PREFIX_MAPPING: sandbox-postgresql=DB
+      # SANDBOX_POSTGRESQL_SERVICE_HOST: postgres
+      # SANDBOX_POSTGRESQL_SERVICE_PORT: 5432
+      # DB_DRIVER: postgresql
+      # DB_USERNAME: admin
+      # DB_PASSWORD: password
+      # DB_DATABASE: docker
+      DB_JNDI: jboss/datasources/sandbox-postgresql
+
     volumes:
       - type: bind
         source: ./mounts/tomcat-jdbc.war
         target: /deployments/tomcat-jdbc.war
+      - type: bind
+        source: ./mounts/postgresql.jar
+        target: /opt/jws-5.7/tomcat/lib/postgresql.jar
+      - type: bind
+        source: ./mounts/context.xml
+        target: /opt/jws-5.7/tomcat/conf/context.xml
     networks:
     - master
 networks:
@@ -19,6 +33,7 @@ networks:
     external: true
 
 # Env Vars: https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/5.7/html/red_hat_jboss_web_server_for_openshift/jws_on_openshift_reference#ref_jws-for-openshift-compatible-environment-variables_assembly_s2i-scripts-and-maven
+# https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/getting_started_with_jboss_eap_for_openshift_container_platform/reference_information#reference_datasources
 
 # 2.4. JWS for OpenShift S2I process
 # You can run and configure the JWS for OpenShift images by using the OpenShift source-to-image (S2I) process with the application template parameters and environment variables.

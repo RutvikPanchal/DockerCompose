@@ -36,7 +36,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 1.) **ActiveMQ Artemis** - Basic Artemis ActiveMQ server
 
-2.) **JBoss Web Server** - A Basic Jboss Web Server
+2.) **JBoss Web Server** - A Basic Jboss Web Server which depends on **Postgres**
 
 2.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
