@@ -11,6 +11,9 @@ services:
       KIE_ADMIN_USER: admin
       KIE_ADMIN_PWD: password
 
+      # Maven Mirror Config:
+      MAVEN_MIRROR_URL: http://nexus:8081/repository/maven-public/
+
       # Database Config
       RHPAM_DRIVER: postgresql
       RHPAM_SERVICE_HOST: postgres

@@ -28,12 +28,15 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | RHPAM - Business Central | 8082 |
 | RHPAM - Kie Server | 8083 |
 | RHPAM - Kie Server - Customized | 8084 <br /> 8447 |
+| JBoss Web Server | 8086 |
 | ActiveMQ | 8161 <br /> 61616 |
 
 ## Apps
 <br/>
 
 1.) **ActiveMQ Artemis** - Basic Artemis ActiveMQ server
+
+2.) **JBoss Web Server** - A Basic Jboss Web Server
 
 2.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
