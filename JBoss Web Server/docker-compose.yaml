@@ -10,8 +10,8 @@ services:
       APPLICATION_NAME: sandbox
     volumes:
       - type: bind
-        source: ./mounts/sandbox.jks
-        target: /etc/certificate/sandbox.jks
+        source: ./mounts/tomcat-jdbc.war
+        target: /deployments/tomcat-jdbc.war
     networks:
     - master
 networks:

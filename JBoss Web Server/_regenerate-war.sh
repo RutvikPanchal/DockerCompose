@@ -2,4 +2,4 @@
 cd ./mounts/jwt-generator
 mvn clean package
 cd ./target
-cp "tomcat-jdbc.jar" "../../"
+cp "tomcat-jdbc.war" "../../"
