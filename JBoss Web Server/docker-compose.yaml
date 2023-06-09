@@ -1,0 +1,33 @@
+version: '3'
+services:
+  jboss-web-server:
+    image: registry.redhat.io/jboss-webserver-5/jws57-openjdk8-openshift-rhel8:5.7.2-8
+    container_name: jboss-web-server
+    ports:
+      - '8086:8080'
+    environment:
+      # Credentials
+      APPLICATION_NAME: sandbox
+    volumes:
+      - type: bind
+        source: ./mounts/sandbox.jks
+        target: /etc/certificate/sandbox.jks
+    networks:
+    - master
+networks:
+  master:
+    external: true
+
+# Env Vars: https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/5.7/html/red_hat_jboss_web_server_for_openshift/jws_on_openshift_reference#ref_jws-for-openshift-compatible-environment-variables_assembly_s2i-scripts-and-maven
+
+# 2.4. JWS for OpenShift S2I process
+# You can run and configure the JWS for OpenShift images by using the OpenShift source-to-image (S2I) process with the application template parameters and environment variables.
+# The S2I process for the JWS for OpenShift images works as follows:
+#     If the configuration source directory contains a Maven settings.xml file, the settings.xml file is moved to the $HOME/.m2/ directory of the new image.
+#     If the source repository contains a pom.xml file, a Maven build is triggered using the contents of the $MAVEN_ARGS environment variable.
+#     By default, the package goal is used with the openshift profile, which includes the -DskipTests argument to skip tests, and the -Dcom.redhat.xpaas.repo.redhatga argument to enable the Red Hat GA repository.
+#     The results of a successful Maven build are copied to the /opt/jws-5.7/tomcat/webapps directory. This includes all WAR files from the source directory that is specified by the $ARTIFACT_DIR environment variable. The default value of $ARTIFACT_DIR is the target/ directory.
+#     You can use the $MAVEN_ARGS_APPEND environment variable to modify the Maven arguments.
+#     All WAR files from the deployments source directory are copied to the /opt/jws-5.7/tomcat/webapps directory.
+#     All files in the configuration source directory are copied to the /opt/jws-5.7/tomcat/conf/ directory, excluding the Maven settings.xml file.
+#     All files in the lib source directory are copied to the /opt/jws-5.7/tomcat/lib/ directory.
