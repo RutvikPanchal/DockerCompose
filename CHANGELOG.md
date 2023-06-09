@@ -1,5 +1,7 @@
 ## 1.3.0
 - Added JBoss Web Server
+  - added a simple jdbc test java webapp
+  - added database config
 
 ## 1.2.2
 - RHPAM - Kie Server - Customized
