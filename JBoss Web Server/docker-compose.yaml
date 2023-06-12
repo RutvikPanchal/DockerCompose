@@ -14,7 +14,7 @@ services:
       # DB_USERNAME: admin
       # DB_PASSWORD: password
       # DB_DATABASE: docker
-      DB_JNDI: jboss/datasources/sandbox-postgresql
+      DB_JNDI: jboss/datasources/sandbox-mariadb
 
     volumes:
       - type: bind
@@ -23,6 +23,9 @@ services:
       - type: bind
         source: ./mounts/postgresql.jar
         target: /opt/jws-5.7/tomcat/lib/postgresql.jar
+      - type: bind
+        source: ./mounts/mariadb.jar
+        target: /opt/jws-5.7/tomcat/lib/mariadb.jar
       - type: bind
         source: ./mounts/context.xml
         target: /opt/jws-5.7/tomcat/conf/context.xml

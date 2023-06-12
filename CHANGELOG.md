@@ -4,7 +4,8 @@
 - Added JBoss Web Server
   - added a simple jdbc test java webapp
   - added database config
-- Added Apache Cassandra
+- Added Apache Cassandra Database
+- Added MariaDB Database
 
 ## 1.2.2
 - RHPAM - Kie Server - Customized

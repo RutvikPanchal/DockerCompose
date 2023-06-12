@@ -23,6 +23,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | Application | Ports ↓ |
 | --- | --- |
 | Kafka | 2181 <br /> 9000 <br /> 9092 |
+| MariaDB | 3306 |
 | Postgres | 4321 |
 | Nexus | 8081 |
 | RHPAM - Business Central | 8082 |
@@ -43,15 +44,17 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 4.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
-5.) **Nexus** - Basic Nexus **Repository Manager** server
+5.) **MariaDB** - Basic MariaDB Database server
 
-6.) **Postgres** - Basic PostgreSQL **Database** server
+6.) **Nexus** - Basic Nexus **Repository Manager** server
 
-7.) **RHPAM Business Central** - RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
+7.) **Postgres** - Basic PostgreSQL **Database** server
 
-8.) **RHPAM Kie Server** - RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+8.) **RHPAM Business Central** - RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
 
-9.) **RHPAM Kie Server (Customized)** - Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
+9.) **RHPAM Kie Server** - RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+
+10.) **RHPAM Kie Server (Customized)** - Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
 
 <br/>
 

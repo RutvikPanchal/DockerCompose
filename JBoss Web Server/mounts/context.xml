@@ -34,12 +34,12 @@
     -->
 
         <Resource auth="Container"
-                  driverClassName="org.postgresql.Driver"
-                  name="jboss/datasources/sandbox-postgresql"
+                  driverClassName="org.mariadb.jdbc.Driver"
+                  name="jboss/datasources/sandbox-mariadb"
                   username="admin"
                   password="password"
                   type="javax.sql.DataSource"
-                  url="jdbc:postgresql://postgres:5432/docker?currentSchema=sandbox"
+                  url="jdbc:mariadb://mariadb:3306/docker"
                   maxWait="10000"
                   maxIdle="30"
                   validationQuery="SELECT 1"

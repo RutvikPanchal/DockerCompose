@@ -8,8 +8,8 @@ services:
     environment:
       POSTGRESQL_USER: admin
       POSTGRESQL_PASSWORD: password
-      POSTGRESQL_ADMIN_PASSWORD: password
       POSTGRESQL_DATABASE: docker
+      POSTGRESQL_ADMIN_PASSWORD: password
     volumes:
       - type: bind
         source: ./mounts/run-sql.sh
