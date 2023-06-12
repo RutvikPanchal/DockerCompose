@@ -1,3 +1,18 @@
+## 1.3.0
+- Postgres
+  - Added scripts to execute sql queries when database starts up
+- Added JBoss Web Server
+  - added a simple jdbc test java webapp
+  - added database config
+- Added Apache Cassandra Database
+- Added MariaDB Database
+
+## 1.2.2
+- RHPAM - Kie Server - Customized
+  - added _regenerate-jars shell script to work with Linux/MacOS
+  - fixed EOL errors
+  - fixed scripts not being executed (added chmod +x) in Linux/MacOS
+
 ## 1.2.1
 - RHPAM - Kie Server - Customized
   - added a script to generate jars from the included java projects
