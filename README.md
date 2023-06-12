@@ -30,25 +30,28 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | RHPAM - Kie Server - Customized | 8084 <br /> 8447 |
 | JBoss Web Server | 8086 |
 | ActiveMQ | 8161 <br /> 61616 |
+| Apache Cassandra | 9042 |
 
 ## Apps
 <br/>
 
-1.) **ActiveMQ Artemis** - Basic Artemis ActiveMQ server
+1.) **ActiveMQ** - Basic Artemis ActiveMQ server
 
-2.) **JBoss Web Server** - A Basic Jboss Web Server which depends on **Postgres**
+2.) **Apache Cassandra** - Basic Apache Cassandra Database server
 
-2.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
+3.) **JBoss Web Server** - Basic Jboss Web Server which depends on **Postgres**
 
-3.) **Nexus** - A basic Nexus **Repository Manager** server
+4.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
-4.) **Postgres** - A basic PostgreSQL **Database** server
+5.) **Nexus** - Basic Nexus **Repository Manager** server
 
-5.) **RHPAM Business Central** - A RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
+6.) **Postgres** - Basic PostgreSQL **Database** server
 
-6.) **RHPAM Kie Server** - A RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+7.) **RHPAM Business Central** - RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
 
-7.) **RHPAM Kie Server (Customized)** - A Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
+8.) **RHPAM Kie Server** - RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+
+9.) **RHPAM Kie Server (Customized)** - Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
 
 <br/>
 

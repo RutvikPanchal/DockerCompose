@@ -1,7 +1,10 @@
 ## 1.3.0
+- Postgres
+  - Added scripts to execute sql queries when database starts up
 - Added JBoss Web Server
   - added a simple jdbc test java webapp
   - added database config
+- Added Apache Cassandra
 
 ## 1.2.2
 - RHPAM - Kie Server - Customized

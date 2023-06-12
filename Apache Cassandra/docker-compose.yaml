@@ -1,0 +1,12 @@
+version: '3'
+services:
+  apache-cassandra:
+    image: cassandra:3.11
+    container_name: apache-cassandra
+    ports:
+      - '9042:9042'
+    networks:
+        - master
+networks:
+  master:
+    external: true
