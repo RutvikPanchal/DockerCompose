@@ -1,6 +1,10 @@
+## 1.3.1
+- JBoss Web Server
+  - removed context.xml mount and added the same functionality using environment variables
+
 ## 1.3.0
 - Postgres
-  - Added scripts to execute sql queries when database starts up
+  - added scripts to execute sql queries when database starts up
 - Added JBoss Web Server
   - added a simple jdbc test java webapp
   - added database config

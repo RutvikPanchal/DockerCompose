@@ -5,8 +5,39 @@ services:
     container_name: jboss-web-server
     ports:
       - '8086:8080'
-    environment:      
-      # DB Config - Either use Env vars or the context.xml volume mount
+    environment:
+    # USAGE: RESOURCES: <prefix1>, <prefix2>, ...
+    #        <prefix1>_NAME: 
+    #        ...
+
+      RESOURCES: RESOURCE
+    # !!! REQUIRED !!!
+      RESOURCE_NAME: jboss/datasources/sandbox-mariadb
+      RESOURCE_DRIVER: org.mariadb.jdbc.Driver
+      RESOURCE_TYPE: javax.sql.DataSource
+      RESOURCE_FACTORY: org.apache.tomcat.jdbc.pool.DataSourceFactory
+      # Define either _URL or { _PROTOCOL, _HOST, _PORT, _DATABASE }
+        # If both sets are defined then URL replaces the { ... }
+      RESOURCE_URL: 
+        # { _PROTOCOL, _HOST, _PORT, _DATABASE }
+      RESOURCE_PROTOCOL: jdbc:mariadb
+      RESOURCE_HOST: mariadb
+      RESOURCE_PORT: 3306
+      RESOURCE_DATABASE: docker
+      # Credentials
+      RESOURCE_USERNAME: admin
+      RESOURCE_PASSWORD: password
+    # OPTIONAL
+      RESOURCE_AUTH: Container
+      RESOURCE_MAX_WAIT: 10000
+      RESOURCE_MAX_IDLE: 30
+      RESOURCE_MIN_IDLE: 
+      RESOURCE_MAX_ACTIVE: 
+      RESOURCE_TRANSACTION_ISOLATION: 
+      RESOURCE_VALIDATION_QUERY: SELECT 1
+      RESOURCE_TEST_WHEN_IDLE: true
+      RESOURCE_TEST_ON_BORROW: true
+
       # DB_SERVICE_PREFIX_MAPPING: sandbox-postgresql=DB
       # SANDBOX_POSTGRESQL_SERVICE_HOST: postgres
       # SANDBOX_POSTGRESQL_SERVICE_PORT: 5432
@@ -14,6 +45,7 @@ services:
       # DB_USERNAME: admin
       # DB_PASSWORD: password
       # DB_DATABASE: docker
+
       DB_JNDI: jboss/datasources/sandbox-mariadb
 
     volumes:
@@ -26,9 +58,6 @@ services:
       - type: bind
         source: ./mounts/mariadb.jar
         target: /opt/jws-5.7/tomcat/lib/mariadb.jar
-      - type: bind
-        source: ./mounts/context.xml
-        target: /opt/jws-5.7/tomcat/conf/context.xml
     networks:
     - master
 networks:
@@ -36,16 +65,4 @@ networks:
     external: true
 
 # Env Vars: https://access.redhat.com/documentation/en-us/red_hat_jboss_web_server/5.7/html/red_hat_jboss_web_server_for_openshift/jws_on_openshift_reference#ref_jws-for-openshift-compatible-environment-variables_assembly_s2i-scripts-and-maven
-# https://access.redhat.com/documentation/en-us/red_hat_jboss_enterprise_application_platform/7.3/html/getting_started_with_jboss_eap_for_openshift_container_platform/reference_information#reference_datasources
-
-# 2.4. JWS for OpenShift S2I process
-# You can run and configure the JWS for OpenShift images by using the OpenShift source-to-image (S2I) process with the application template parameters and environment variables.
-# The S2I process for the JWS for OpenShift images works as follows:
-#     If the configuration source directory contains a Maven settings.xml file, the settings.xml file is moved to the $HOME/.m2/ directory of the new image.
-#     If the source repository contains a pom.xml file, a Maven build is triggered using the contents of the $MAVEN_ARGS environment variable.
-#     By default, the package goal is used with the openshift profile, which includes the -DskipTests argument to skip tests, and the -Dcom.redhat.xpaas.repo.redhatga argument to enable the Red Hat GA repository.
-#     The results of a successful Maven build are copied to the /opt/jws-5.7/tomcat/webapps directory. This includes all WAR files from the source directory that is specified by the $ARTIFACT_DIR environment variable. The default value of $ARTIFACT_DIR is the target/ directory.
-#     You can use the $MAVEN_ARGS_APPEND environment variable to modify the Maven arguments.
-#     All WAR files from the deployments source directory are copied to the /opt/jws-5.7/tomcat/webapps directory.
-#     All files in the configuration source directory are copied to the /opt/jws-5.7/tomcat/conf/ directory, excluding the Maven settings.xml file.
-#     All files in the lib source directory are copied to the /opt/jws-5.7/tomcat/lib/ directory.
+# For Runtime Script behaviour, check out the launch.sh and launch directory in /opt/jws-5.7/tomcat/bin directory
