@@ -1,3 +1,7 @@
+## 1.3.2
+- RHPAM - Business Central
+  - added a kie-server for testing pam projects
+
 ## 1.3.1
 - JBoss Web Server
   - removed context.xml mount and added the same functionality using environment variables
