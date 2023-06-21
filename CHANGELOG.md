@@ -1,6 +1,8 @@
 ## 1.3.2
 - RHPAM - Business Central
   - added a kie-server for testing pam projects
+- JBoss Web Server
+  - fixed mariadb driver not being downloaded
 
 ## 1.3.1
 - JBoss Web Server
