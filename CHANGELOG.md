@@ -1,3 +1,6 @@
+## 1.5.0
+- Added Keycloak docker-compose
+
 ## 1.4.0
 - Added JFrog Artifactory docker-compose
 - Added Infinispan docker-compose

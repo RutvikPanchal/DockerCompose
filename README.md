@@ -22,7 +22,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 **NOTE (Windows) :** run `netstat -ano` on a terminal to see all the in use ports
 
-**NOTE:** host.docker.internal refers to "locahost" of the host machine
+**NOTE:** host.docker.internal refers to "localhost" of the host machine
 
 | Application | Ports ↓ |
 | --- | --- |
@@ -37,6 +37,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | JBoss Web Server | 8086 |
 | JFrog Artifactory | 8087 |
 | ActiveMQ | 8161 <br /> 61616 |
+| Keycloak | 8480 |
 | Apache Cassandra | 9042 |
 | Prometheus | 9060 |
 | Infinispan | 11222 |
@@ -58,19 +59,21 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 
 7.) **Kafka** - Single Node Kafka server with a single **Zookeeper** instance and a **Kafdrop UI** WebApp
 
-8.) **MariaDB** - Basic MariaDB Database server
+8.) **Keycloak** - Open Source Identity and Access Management
 
-9.) **Nexus** - Basic Nexus **Repository Manager** server
+9.) **MariaDB** - Basic MariaDB Database server
 
-10.) **Postgres** - Basic PostgreSQL **Database** server
+10.) **Nexus** - Basic Nexus **Repository Manager** server
 
-11.) **Prometheus** - Basic Prometheus **Metrics** Collection server
+11.) **Postgres** - Basic PostgreSQL **Database** server
 
-12.) **RHPAM Business Central** - RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
+12.) **Prometheus** - Basic Prometheus **Metrics** Collection server
 
-13.) **RHPAM Kie Server** - RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+13.) **RHPAM Business Central** - RedHat Process Automation Manager Business Central instance which allows users to develop and manage RHPAM Projects
 
-14.) **RHPAM Kie Server (Customized)** - Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
+14.) **RHPAM Kie Server** - RedHat Process Automation Manager Kie Server instance which depends on **AMQ Broker**, **Postgres** and **Nexus**
+
+15.) **RHPAM Kie Server (Customized)** - Customized RedHat Process Automation Manager Kie Server instance which includes customizations injected as jar files and volume mounts (java projects which extend the api are included as well)
 
 <br/>
 
