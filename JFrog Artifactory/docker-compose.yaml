@@ -1,0 +1,13 @@
+version: '3'
+services:
+  artifactory:
+    image: releases-docker.jfrog.io/jfrog/artifactory-oss:latest
+    container_name: artifactory
+    ports:
+      - '8087:8081'
+    environment: {}
+    networks:
+      - master
+networks:
+  master:
+    external: true

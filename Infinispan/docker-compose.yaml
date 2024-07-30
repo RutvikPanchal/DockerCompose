@@ -1,0 +1,18 @@
+version: '3'
+services:
+  infinispan:
+    image: quay.io/infinispan/server:15.0
+    container_name: infinispan
+    ports:
+        - "11222:11222"
+    command: "-c infinispan.xml"
+    volumes:
+      - ./mounts/infinispan.xml:/opt/infinispan/server/conf/infinispan.xml:z
+    # environment:
+    #   USER: admin
+    #   PASS: password
+    networks:
+      - master
+networks:
+  master:
+    external: true

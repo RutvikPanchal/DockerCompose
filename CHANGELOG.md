@@ -1,3 +1,10 @@
+## 1.4.0
+- Added JFrog Artifactory docker-compose
+- Added Infinispan docker-compose
+- Added Prometheus docker-compose
+- Added Grafana docker-compose
+- Fixed minor issue with Kafka - Single Node and minor refinements
+
 ## 1.3.1
 - JBoss Web Server
   - removed context.xml mount and added the same functionality using environment variables

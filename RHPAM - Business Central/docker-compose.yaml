@@ -11,6 +11,24 @@ services:
       KIE_ADMIN_PWD: password
     networks:
     - master
+  kie-server:
+    image: registry.redhat.io/rhpam-7/rhpam-kieserver-rhel8:7.13.2
+    container_name: kie-server
+    environment:
+      # Credentials
+      KIE_ADMIN_USER: admin
+      KIE_ADMIN_PWD: password
+
+      MAVEN_REPOS: BC
+      BC_MAVEN_REPO_ID: business-central
+      BC_MAVEN_REPO_URL: http://business-central:8080/maven2
+      BC_MAVEN_REPO_USERNAME: admin
+      BC_MAVEN_REPO_PASSWORD: password
+      KIE_SERVER_CONTROLLER_HOST: business-central
+    depends_on:
+      - business-central
+    networks:
+    - master
 networks:
   master:
     external: true
