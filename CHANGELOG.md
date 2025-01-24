@@ -1,9 +1,6 @@
-## 1.6.0
-- Added Microsoft SQL Server docker-compose
-- Added Keycloak docker-compose
-
 ## 1.5.0
 - Added Keycloak docker-compose
+- Added Microsoft SQL Server docker-compose
 
 ## 1.4.0
 - Added JFrog Artifactory docker-compose
