@@ -1,3 +1,6 @@
+## 1.5.1
+- Updated and Improved the Keycloak server to v26.0
+
 ## 1.5.0
 - Added Keycloak docker-compose
 - Added Microsoft SQL Server docker-compose

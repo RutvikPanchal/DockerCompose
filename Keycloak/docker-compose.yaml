@@ -8,7 +8,7 @@ services:
     volumes:
       - ./mounts/sql:/docker-entrypoint-initdb.d/
     healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "kogito", "-U", "kogito-user" ]
+      test: [ "CMD", "pg_isready", "-q", "-d", "keycloak", "-U", "keycloak-user" ]
       timeout: 45s
       interval: 10s
       retries: 50
@@ -20,26 +20,27 @@ services:
 
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak/keycloak:legacy
+    image: registry.redhat.io/rhbk/keycloak-rhel9:26.0
     ports:
       - "8480:8080"
-    volumes:
-      - ./mounts/keycloak-realm.json:/tmp/kogito-realm.json
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/auth/realms/kogito" ]
-      interval: 1s
-      timeout: 1s
-      retries: 50
+      - "8443:8443"
+      - "9094:9000"
+    entrypoint: ["/bin/sh", "-c", 'cd /opt/keycloak && keytool -genkeypair -storepass password -storetype PKCS12 -keyalg RSA -keysize 2048 -dname "CN=server" -alias server -ext "SAN:c=DNS:localhost,IP:127.0.0.1" -keystore conf/server.keystore && /opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh start']
     environment:
-      DB_VENDOR: POSTGRES
-      DB_ADDR: postgres
-      DB_DATABASE: kogito
-      DB_USER: kogito-user
-      DB_SCHEMA: public
-      DB_PASSWORD: kogito-pass
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      KEYCLOAK_IMPORT: /tmp/kogito-realm.json
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_PORT: 5432
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_SCHEMA: public
+      KC_DB_USERNAME: keycloak-user
+      KC_DB_PASSWORD: keycloak-pass
+      KC_HOSTNAME: host.docker.internal
+      KC_HTTP_PORT: 8080
+      KC_HTTP_ENABLED: true
+      KC_HTTP_MANAGEMENT_PORT: 9000
+      KC_HEALTH_ENABLED: true
     networks:
       - master
 networks:

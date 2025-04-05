@@ -38,7 +38,7 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | JBoss Web Server | 8086 |
 | JFrog Artifactory | 8087 |
 | ActiveMQ | 8161 <br /> 61616 |
-| Keycloak | 8480 |
+| Keycloak | 8480 <br /> 8443 <br /> 9094 |
 | Apache Cassandra | 9042 |
 | Prometheus | 9060 |
 | Infinispan | 11222 |
