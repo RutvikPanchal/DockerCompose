@@ -1,0 +1,15 @@
+version: '3'
+services:
+  ibm-websphere:
+    image: ibmcom/websphere-traditional:9.0.5.10
+    container_name: ibm-websphere
+    ports:
+      - "9043:9043"
+      - "9443:9443"
+    networks:
+      - master
+networks:
+  master:
+    external: true
+
+# docker exec ibm-websphere cat /tmp/PASSWORD
