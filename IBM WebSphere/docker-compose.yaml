@@ -8,6 +8,8 @@ services:
     ports:
       - "9043:9043"
       - "9443:9443"
+    environment:
+      ENABLE_BASIC_LOGGING: true
     networks:
       - master
 networks:
