@@ -5,6 +5,7 @@ services:
     container_name: ibm-websphere
     volumes:
       - ./mounts/opentelemetry-javaagent.jar:/opt/IBM/WebSphere/agents/opentelemetry-javaagent.jar
+      - ./mounts/PASSWORD:/tmp/PASSWORD
     ports:
       - "9043:9043"
       - "9443:9443"
@@ -17,3 +18,11 @@ networks:
     external: true
 
 # docker exec ibm-websphere cat /tmp/PASSWORD
+# -javaagent:/opt/IBM/WebSphere/agents/opentelemetry-javaagent.jar -Dotel.service.name=sample-app -Dotel.traces.exporter=otlp -Dotel.exporter.otlp.endpoint=http://jaeger:4318 -Dotel.metrics.exporter=none -Dotel.logs.exporter=none
+# 
+# 
+# - OTEL_SERVICE_NAME=sample-app
+# - OTEL_TRACES_EXPORTER=otlp
+# - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+# - OTEL_METRICS_EXPORTER=none
+# - OTEL_LOGS_EXPORTER=none
