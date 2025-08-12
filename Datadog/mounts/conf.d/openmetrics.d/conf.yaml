@@ -1,7 +1,7 @@
 init_config:
 instances:
-  - name: metrics
-    namespace: metrics
+  - name: metrics_sample
+    namespace: metrics_sample
     openmetrics_endpoint: https://host.docker.internal:9443/metrics
     tls_verify: false
     max_returned_metrics: 16384
