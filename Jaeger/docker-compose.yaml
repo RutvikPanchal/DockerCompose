@@ -10,7 +10,7 @@ services:
       # - "5778:5778"       #	HTTP agent	serve configs
       - "16686:16686"     #	HTTP query	serve frontend
       # - "14268:14268"     #	HTTP collector accept jaeger.thrift directly from clients
-      - "9411:9411"       #	HTTP collector Zipkin compatible endpoint
+      # - "9411:9411"       #	HTTP collector Zipkin compatible endpoint
       - "4317:4317"       # gRPC collector OTLP compatible
       - "4318:4318"       # HTTP collector OTLP compatible endpoint
     environment:

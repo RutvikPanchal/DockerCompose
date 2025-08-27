@@ -1,0 +1,19 @@
+version: '3'
+services:
+  apicurio-ui:
+    image: apicurio/apicurio-registry-ui:3.0.12
+    container_name: apicurio-ui
+    ports:
+      - "8088:8080"
+    networks:
+      - master
+  apicurio-registry:
+    image: apicurio/apicurio-registry:3.0.12
+    container_name: apicurio-registry
+    ports:
+      - "9091:8080"
+    networks:
+      - master
+networks:
+  master:
+    external: true

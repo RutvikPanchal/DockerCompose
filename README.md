@@ -31,12 +31,15 @@ A collection of docker-compose.yaml files to quickly spin up pods in Docker Desk
 | Grafana | 3000 |
 | MariaDB | 3306 |
 | Postgres | 4321 |
+| Datadog | 4217 <br /> 4218 |
+| Jaeger | 4317 <br /> 4318 <br /> 6831 <br /> 16686 |
 | Nexus | 8081 |
 | RHPAM - Business Central | 8082 <br /> 8083 |
 | RHPAM - Kie Server | 8084 |
 | RHPAM - Kie Server - Customized | 8085 <br /> 8447 |
 | JBoss Web Server | 8086 |
 | JFrog Artifactory | 8087 |
+| Apicurio Registry | 8088 <br /> 9091 |
 | ActiveMQ | 8161 <br /> 61616 |
 | Keycloak | 8480 <br /> 8443 <br /> 9094 |
 | Apache Cassandra | 9042 |

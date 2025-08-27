@@ -10,12 +10,15 @@ services:
     volumes:
       - ./mounts/conf.d/openmetrics.d/conf.yaml:/etc/datadog-agent/conf.d/openmetrics.d/conf.yaml
     environment:
-      DD_API_KEY: bc79a70fb2e2cea3d0a31ff485d75d6a
+      DD_API_KEY: 12a329ce85507b5280e9474f33d52cd2
       DD_SITE: "us5.datadoghq.com"
       DD_DOGSTATSD_NON_LOCAL_TRAFFIC: true
       DD_HOSTNAME: dd-agent
       DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_GRPC_ENDPOINT: 0.0.0.0:4317
       DD_OTLP_CONFIG_RECEIVER_PROTOCOLS_HTTP_ENDPOINT: 0.0.0.0:4318
+      DD_OTLP_CONFIG_LOGS_ENABLED: true
+      DD_LOGS_ENABLED: true
+      DD_ENV: "live"
     networks:
       - master
 networks:
