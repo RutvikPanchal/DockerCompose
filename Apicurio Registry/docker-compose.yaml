@@ -5,6 +5,8 @@ services:
     container_name: apicurio-ui
     ports:
       - "8088:8080"
+    environment:
+      REGISTRY_API_URL: http://localhost:9091/apis/registry/v3
     networks:
       - master
   apicurio-registry:
@@ -12,6 +14,8 @@ services:
     container_name: apicurio-registry
     ports:
       - "9091:8080"
+    environment:
+      QUARKUS_HTTP_CORS_ORIGINS: "*"
     networks:
       - master
 networks:
