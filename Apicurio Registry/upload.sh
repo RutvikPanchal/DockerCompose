@@ -157,7 +157,7 @@ if [[ "$STATUS" == "409" ]]; then
     fi
 fi
 
-if [[ "$STATUS" -ne "200" && "$STATUS" -ne "409" ]]; then
-    echo "An Unknown Error Occurred"
+if [[ "$STATUS" -ne "200" && "$STATUS" -ne "204" ]]; then
+    echo "An Error Occurred"
     exit 1
 fi
