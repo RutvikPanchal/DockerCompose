@@ -5,7 +5,12 @@ OAS_FILE="./sample.yaml"
 GROUP_ID="Sandbox"
 REGISTRY_URL="https://apicurio-registry-rutvik-panchal-dev.apps.rm2.thpm.p1.openshiftapps.com"
 
-echo "Installing dependencies..."
+if [[ -f "$OAS_FILE" ]]; then
+    echo "Installing dependencies..."
+else
+    echo "File does not exist: $OAS_FILE"
+    exit 1
+fi
 # dnf install -y jq > /dev/null
 # dnf install -y yq > /dev/null
 echo "\n"
