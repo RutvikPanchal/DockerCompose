@@ -8,6 +8,7 @@ REGISTRY_URL="https://apicurio-registry-rutvik-panchal-dev.apps.rm2.thpm.p1.open
 echo "Installing dependencies..."
 # dnf install -y jq > /dev/null
 # dnf install -y yq > /dev/null
+echo "\n"
 
 # Detect file type (JSON or YAML)
 EXT="${OAS_FILE##*.}"
@@ -18,13 +19,15 @@ if [[ "$EXT" == "json" ]]; then
   ARTIFACT_ID=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
   VERSION=$(jq -r '.info.version' "$OAS_FILE")
   DESCRIPTION=$(jq -r '.info.description | select(. != "") // "No description"' "$OAS_FILE")
-  CONTENT=$(jq -Rs . < "$OAS_FILE")
+  FILE_JSON=$(jq -S . ${OAS_FILE})
+  FILE_JSON_ESCAPED=$(jq -Rs . < "$OAS_FILE")
 else
   NAME=$(yq -r '.info.title' "$OAS_FILE")
   ARTIFACT_ID=$(echo "$NAME" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
   VERSION=$(yq -r '.info.version' "$OAS_FILE")
   DESCRIPTION=$(yq -r '.info.description | select(. != "") // "No description"' "$OAS_FILE")
-  CONTENT=$(yq -o=json '.' "$OAS_FILE" | jq -Rs .)
+  FILE_JSON=$(yq -o=json '.' "$OAS_FILE" | jq -S .)
+  FILE_JSON_ESCAPED=$(yq -o=json '.' "$OAS_FILE" | jq -Rs .)
 fi
 
 echo "Uploading API Spec:"
@@ -33,6 +36,7 @@ echo "  ArtifactId  : $ARTIFACT_ID"
 echo "  Name        : $NAME"
 echo "  Version     : $VERSION"
 echo "  Description : $DESCRIPTION"
+echo "\n"
 
 PAYLOAD=$(jq -n \
   --arg groupId "$GROUP_ID" \
@@ -40,7 +44,7 @@ PAYLOAD=$(jq -n \
   --arg version "$VERSION" \
   --arg name "$NAME" \
   --arg description "$DESCRIPTION" \
-  --argjson content "$CONTENT" \
+  --argjson content "$FILE_JSON_ESCAPED" \
   '{
         groupId: $groupId,
         artifactId: $artifactId,
@@ -48,7 +52,9 @@ PAYLOAD=$(jq -n \
         name: $name,
         description: $description,
         firstVersion: {
+            name: $name,
             version: $version,
+            description: $description,
             content: {
                 content: $content,
                 contentType: "application/json"
@@ -57,16 +63,91 @@ PAYLOAD=$(jq -n \
     }'
 )
 
-# Upload to Apicurio Registry
+# 1.) Try to Create an Artifact
+echo "Step 1.) Try to Create an Artifact..."
 REGISTRY_URL=${REGISTRY_URL}/apis/registry/v3/groups/${GROUP_ID}/artifacts
-echo $REGISTRY_URL
-
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" "${REGISTRY_URL}")
-
-# RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE "${REGISTRY_URL}/${ARTIFACT_ID}")
-
 BODY=$(echo "$RESPONSE" | sed '$d')
 STATUS=$(echo "$RESPONSE" | tail -n1)
-
 echo "Response Code: ${STATUS}"
 echo "Response Body: ${BODY}"
+echo "\n"
+
+# 2.) Artifact already exists
+if [[ "$STATUS" == "409" ]]; then
+    echo "Step 2.) Artifact already exists. Fetching latest OAS Spec from the registry..."
+    VERSIONS_URL="${REGISTRY_URL}/${ARTIFACT_ID}/versions?orderby=createdOn&order=asc&limit=1"
+    LATEST_VERSION=$(curl -s "${VERSIONS_URL}" | jq -r '.versions[0].version' )
+    OAS_URL="${REGISTRY_URL}/${ARTIFACT_ID}/versions/${LATEST_VERSION}/content"
+    RESPONSE=$(curl -s -w "\n%{http_code}" "${OAS_URL}")
+    BODY=$(echo "$RESPONSE" | sed '$d')
+    STATUS=$(echo "$RESPONSE" | tail -n1)
+    echo "Response Code: ${STATUS}"
+    echo "\n"
+
+    echo "Step 3.) Checking whether the API versions of the specs in the build and the registry are the same..."
+    if [[ "$LATEST_VERSION" == "$VERSION" ]]; then
+        echo "API versions are the same, Please update the API Version in the OAS Spec you are trying to upload"
+        exit 1
+    else
+        echo "API versions differ"
+    fi
+    echo "\n"
+
+    if [[ "$STATUS" == "200" ]]; then
+        echo "Step 4.) Checking whether the OAS specs in the build and the registry are the same..."
+        STR_JSON=$(echo "${BODY}" | jq -S .)
+        if [[ "$FILE_JSON" == "$STR_JSON" ]]; then
+            echo "OAS Specs are the same, please update the OAS Spec you are trying to "
+        else
+            echo "OAS Specs differ"
+            echo "\n"
+
+            PAYLOAD=$(jq -n \
+                --arg version "$VERSION" \
+                --arg name "$NAME" \
+                --arg description "$DESCRIPTION" \
+                --argjson content "$FILE_JSON_ESCAPED" \
+                    '{
+                        name: $name,
+                        version: $version,
+                        description: $description,
+                        content: {
+                            content: $content,
+                            contentType: "application/json"
+                        }
+                    }'
+                )
+            
+            echo "Step 5.) Creating a new version: ${VERSION}..."
+            VERSION_URL=${REGISTRY_URL}/${ARTIFACT_ID}/versions
+            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" "${VERSION_URL}")
+            BODY=$(echo "$RESPONSE" | sed '$d')
+            STATUS=$(echo "$RESPONSE" | tail -n1)
+            echo "Response Code: ${STATUS}"
+            echo "Response Body: ${BODY}"
+            echo "\n"
+
+            if [[ "$STATUS" == "200" ]]; then
+
+                PAYLOAD=$(jq -n \
+                --arg name "$NAME" \
+                --arg description "$DESCRIPTION" \
+                    '{
+                        name: $name,
+                        description: $description
+                    }'
+                )
+
+                echo "Updating Artifact Metadata..."
+                METADATA_URL=${REGISTRY_URL}/${ARTIFACT_ID}
+                RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT -H "Content-Type: application/json" -d "${PAYLOAD}" "${METADATA_URL}")
+                BODY=$(echo "$RESPONSE" | sed '$d')
+                STATUS=$(echo "$RESPONSE" | tail -n1)
+                echo "Response Code: ${STATUS}"
+                echo "Response Body: ${BODY}"
+                echo "\n"
+            fi
+        fi
+    fi
+fi
