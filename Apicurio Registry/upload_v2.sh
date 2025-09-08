@@ -43,35 +43,17 @@ echo "  Version     : $VERSION"
 echo "  Description : $DESCRIPTION"
 echo "\n"
 
-PAYLOAD=$(jq -n \
-  --arg groupId "$GROUP_ID" \
-  --arg artifactId "$ARTIFACT_ID" \
-  --arg version "$VERSION" \
-  --arg name "$NAME" \
-  --arg description "$DESCRIPTION" \
-  --argjson content "$FILE_JSON_ESCAPED" \
-  '{
-        groupId: $groupId,
-        artifactId: $artifactId,
-        artifactType: "OPENAPI",
-        name: $name,
-        description: $description,
-        firstVersion: {
-            name: $name,
-            version: $version,
-            description: $description,
-            content: {
-                content: $content,
-                contentType: "application/json"
-            }
-        }
-    }'
-)
-
 # 1.) Try to Create an Artifact
 echo "Step 1.) Try to Create an Artifact..."
-REGISTRY_URL=${REGISTRY_URL}/apis/registry/v3/groups/${GROUP_ID}/artifacts
-RESPONSE=$(curl -s -w "\n%{http_code}" -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" "${REGISTRY_URL}")
+REGISTRY_URL=${REGISTRY_URL}/apis/registry/v2/groups/${GROUP_ID}/artifacts
+RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+    -H "Content-Type: application/json" \
+    -H "X-Registry-ArtifactType: OPENAPI" \
+    -H "X-Registry-ArtifactId: ${ARTIFACT_ID}" \
+    -H "X-Registry-Version: ${VERSION}" \
+    -H "X-Registry-Name: ${NAME}" \
+    -H "X-Registry-Description: ${DESCRIPTION}" \
+    -d "${FILE_JSON}" "${REGISTRY_URL}")
 BODY=$(echo "$RESPONSE" | sed '$d')
 STATUS=$(echo "$RESPONSE" | tail -n1)
 echo "Response Code: ${STATUS}"
@@ -80,84 +62,41 @@ echo "\n"
 
 # 2.) Artifact already exists
 if [[ "$STATUS" == "409" ]]; then
-    echo "Step 2.) Artifact already exists. Fetching latest OAS Spec from the registry..."
-    VERSIONS_URL="${REGISTRY_URL}/${ARTIFACT_ID}/versions?orderby=createdOn&order=asc&limit=1"
-    LATEST_VERSION=$(curl -s "${VERSIONS_URL}" | jq -r '.versions[0].version' )
-    OAS_URL="${REGISTRY_URL}/${ARTIFACT_ID}/versions/${LATEST_VERSION}/content"
-    RESPONSE=$(curl -s -w "\n%{http_code}" "${OAS_URL}")
+    echo "Step 2.) Creating a new version: ${VERSION}..."
+    VERSION_URL=${REGISTRY_URL}/${ARTIFACT_ID}/versions
+    RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+        -H "X-Registry-Version: ${VERSION}" \
+        -H "X-Registry-Name: ${NAME}" \
+        -H "X-Registry-Description: ${DESCRIPTION}" \
+        -d "${FILE_JSON}" "${VERSION_URL}")
     BODY=$(echo "$RESPONSE" | sed '$d')
     STATUS=$(echo "$RESPONSE" | tail -n1)
     echo "Response Code: ${STATUS}"
-    echo "\n"
-
-    echo "Step 3.) Checking whether the API versions of the specs in the build and the registry are the same..."
-    if [[ "$LATEST_VERSION" == "$VERSION" ]]; then
-        echo "API versions are the same, Please update the API Version in the OAS Spec you are trying to upload"
-        exit 1
-    else
-        echo "API versions differ"
-    fi
+    echo "Response Body: ${BODY}"
     echo "\n"
 
     if [[ "$STATUS" == "200" ]]; then
-        echo "Step 4.) Checking whether the OAS specs in the build and the registry are the same..."
-        STR_JSON=$(echo "${BODY}" | jq -S .)
-        if [[ "$FILE_JSON" == "$STR_JSON" ]]; then
-            echo "OAS Specs are the same, please update the OAS Spec you are trying to "
-        else
-            echo "OAS Specs differ"
-            echo "\n"
 
-            PAYLOAD=$(jq -n \
-                --arg version "$VERSION" \
-                --arg name "$NAME" \
-                --arg description "$DESCRIPTION" \
-                --argjson content "$FILE_JSON_ESCAPED" \
-                    '{
-                        name: $name,
-                        version: $version,
-                        description: $description,
-                        content: {
-                            content: $content,
-                            contentType: "application/json"
-                        }
-                    }'
-                )
-            
-            echo "Step 5.) Creating a new version: ${VERSION}..."
-            VERSION_URL=${REGISTRY_URL}/${ARTIFACT_ID}/versions
-            RESPONSE=$(curl -s -w "\n%{http_code}" -X POST -H "Content-Type: application/json" -d "${PAYLOAD}" "${VERSION_URL}")
-            BODY=$(echo "$RESPONSE" | sed '$d')
-            STATUS=$(echo "$RESPONSE" | tail -n1)
-            echo "Response Code: ${STATUS}"
-            echo "Response Body: ${BODY}"
-            echo "\n"
+        PAYLOAD=$(jq -n \
+        --arg name "$NAME" \
+        --arg description "$DESCRIPTION" \
+            '{
+                name: $name,
+                description: $description
+            }'
+        )
 
-            if [[ "$STATUS" == "200" ]]; then
-
-                PAYLOAD=$(jq -n \
-                --arg name "$NAME" \
-                --arg description "$DESCRIPTION" \
-                    '{
-                        name: $name,
-                        description: $description
-                    }'
-                )
-
-                echo "Updating Artifact Metadata..."
-                METADATA_URL=${REGISTRY_URL}/${ARTIFACT_ID}
-                RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT -H "Content-Type: application/json" -d "${PAYLOAD}" "${METADATA_URL}")
-                BODY=$(echo "$RESPONSE" | sed '$d')
-                STATUS=$(echo "$RESPONSE" | tail -n1)
-                echo "Response Code: ${STATUS}"
-                echo "Response Body: ${BODY}"
-                echo "\n"
-            fi
-        fi
+        echo "Step 3.) Updating Artifact Metadata..."
+        METADATA_URL=${REGISTRY_URL}/${ARTIFACT_ID}/meta
+        RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT -H "Content-Type: application/json" -d "${PAYLOAD}" "${METADATA_URL}")
+        BODY=$(echo "$RESPONSE" | sed '$d')
+        STATUS=$(echo "$RESPONSE" | tail -n1)
+        echo "Response Code: ${STATUS}"
+        echo "\n"
     fi
 fi
 
 if [[ "$STATUS" -ne "200" && "$STATUS" -ne "204" ]]; then
-    echo "An Error Occurred"
+    echo "ERROR: ${BODY}"
     exit 1
 fi
