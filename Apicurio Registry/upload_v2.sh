@@ -13,7 +13,6 @@ else
 fi
 # dnf install -y jq > /dev/null
 # dnf install -y yq > /dev/null
-echo "\n"
 
 # Detect file type (JSON or YAML)
 EXT="${OAS_FILE##*.}"
@@ -35,15 +34,16 @@ else
   FILE_JSON_ESCAPED=$(yq -o=json '.' "$OAS_FILE" | jq -Rs .)
 fi
 
+echo ""
 echo "Uploading API Spec:"
 echo "  GroupId     : $GROUP_ID"
 echo "  ArtifactId  : $ARTIFACT_ID"
 echo "  Name        : $NAME"
 echo "  Version     : $VERSION"
 echo "  Description : $DESCRIPTION"
-echo "\n"
 
 # 1.) Try to Create an Artifact
+echo ""
 echo "Step 1.) Try to Create an Artifact..."
 REGISTRY_URL=${REGISTRY_URL}/apis/registry/v2/groups/${GROUP_ID}/artifacts
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
@@ -58,10 +58,10 @@ BODY=$(echo "$RESPONSE" | sed '$d')
 STATUS=$(echo "$RESPONSE" | tail -n1)
 echo "Response Code: ${STATUS}"
 echo "Response Body: ${BODY}"
-echo "\n"
 
 # 2.) Artifact already exists
 if [[ "$STATUS" == "409" ]]; then
+    echo ""
     echo "Step 2.) Creating a new version: ${VERSION}..."
     VERSION_URL=${REGISTRY_URL}/${ARTIFACT_ID}/versions
     RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
@@ -73,7 +73,6 @@ if [[ "$STATUS" == "409" ]]; then
     STATUS=$(echo "$RESPONSE" | tail -n1)
     echo "Response Code: ${STATUS}"
     echo "Response Body: ${BODY}"
-    echo "\n"
 
     if [[ "$STATUS" == "200" ]]; then
 
@@ -86,17 +85,18 @@ if [[ "$STATUS" == "409" ]]; then
             }'
         )
 
+        echo ""
         echo "Step 3.) Updating Artifact Metadata..."
         METADATA_URL=${REGISTRY_URL}/${ARTIFACT_ID}/meta
         RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT -H "Content-Type: application/json" -d "${PAYLOAD}" "${METADATA_URL}")
         BODY=$(echo "$RESPONSE" | sed '$d')
         STATUS=$(echo "$RESPONSE" | tail -n1)
         echo "Response Code: ${STATUS}"
-        echo "\n"
     fi
 fi
 
 if [[ "$STATUS" -ne "200" && "$STATUS" -ne "204" ]]; then
+    echo ""
     echo "ERROR: ${BODY}"
     exit 1
 fi
