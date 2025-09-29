@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: create-branch
+  namespace: rutvik-panchal-dev
+spec:
+  params:
+    - description: Artifact Name
+      name: artifact
+      type: string
+  steps:
+    - args:
+        - '-c'
+        - |
+          echo $(params.artifact)
+          BRANCH_NAME=$(params.artifact)
+
+          cd ./target_repo
+
+          git config --global --add safe.directory /workspace/source/target_repo
+          git config user.name "Tekton Bot"
+          git config user.email "tekton-bot@openshift.com"
+
+          git checkout -b ${BRANCH_NAME}
+          git add .
+          git commit -m "added oas spec"
+          git push origin ${BRANCH_NAME}
+      command:
+        - /bin/bash
+      computeResources: {}
+      image: 'image-registry.openshift-image-registry.svc:5000/rutvik-panchal-dev/custom:9.6'
+      name: upload-openapi
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - name: source

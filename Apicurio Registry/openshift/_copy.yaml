@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: copy-file
+  namespace: rutvik-panchal-dev
+spec:
+  params:
+    - description: Source file to copy
+      name: source_file
+      type: string
+    - description: Target file
+      name: target_file
+      type: string
+  steps:
+    - args:
+        - '-c'
+        - |
+          echo $(params.source_file)
+          echo $(params.target_file)
+          SOURCE_FILE=$(params.source_file)
+          TARGET_FILE=$(params.target_file)
+
+          cp ./source_repo/${SOURCE_FILE} ./target_repo/${TARGET_FILE}
+      command:
+        - /bin/bash
+      computeResources: {}
+      image: 'image-registry.openshift-image-registry.svc:5000/rutvik-panchal-dev/custom:9.6'
+      name: copy-file
+      workingDir: $(workspaces.source.path)
+  workspaces:
+    - name: source

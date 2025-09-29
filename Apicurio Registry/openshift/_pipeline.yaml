@@ -1,0 +1,151 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: apicurio
+  namespace: rutvik-panchal-dev
+spec:
+  params:
+    - default: openapi.yaml
+      name: oas-filepath
+      type: string
+  tasks:
+    - name: upload-to-apicurio
+      params:
+        - name: git-url
+          value: 'https://gitlab.com/visionary-automation-testing/automation-testing/interactive-testing'
+        - name: git-revision
+          value: download
+        - name: artifact-id
+          value: a
+        - name: group-id
+          value: sandbox
+        - name: apicurio-url
+          value: 'https://apicurio-registry-rutvik-panchal-dev.apps.rm2.thpm.p1.openshiftapps.com'
+        - name: oas-filepath
+          value: $(params.oas-filepath)
+      runAfter:
+        - git-clone-target
+      taskRef:
+        kind: Task
+        name: upload-openapi-to-apicurio
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: git-clone-source
+      params:
+        - name: CRT_FILENAME
+          value: ca-bundle.crt
+        - name: HTTP_PROXY
+          value: ''
+        - name: HTTPS_PROXY
+          value: ''
+        - name: NO_PROXY
+          value: ''
+        - name: SUBDIRECTORY
+          value: source_repo
+        - name: USER_HOME
+          value: /home/git
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: VERBOSE
+          value: 'false'
+        - name: SSL_VERIFY
+          value: 'true'
+        - name: URL
+          value: 'https://gitlab.com/visionary-automation-testing/automation-testing/interactive-testing.git'
+        - name: REVISION
+          value: rutvik
+        - name: REFSPEC
+          value: ''
+        - name: SUBMODULES
+          value: 'true'
+        - name: DEPTH
+          value: '1'
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: ''
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: git-clone-target
+      params:
+        - name: CRT_FILENAME
+          value: ca-bundle.crt
+        - name: HTTP_PROXY
+          value: ''
+        - name: HTTPS_PROXY
+          value: ''
+        - name: NO_PROXY
+          value: ''
+        - name: SUBDIRECTORY
+          value: target_repo
+        - name: USER_HOME
+          value: /home/git
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: VERBOSE
+          value: 'false'
+        - name: SSL_VERIFY
+          value: 'true'
+        - name: URL
+          value: 'https://gitlab.com/visionary-automation-testing/automation-testing/interactive-testing.git'
+        - name: REVISION
+          value: main
+        - name: REFSPEC
+          value: ''
+        - name: SUBMODULES
+          value: 'true'
+        - name: DEPTH
+          value: '1'
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: ''
+      runAfter:
+        - git-clone-source
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: copy-oas-spec
+      params:
+        - name: source_file
+          value: $(params.oas-filepath)
+        - name: target_file
+          value: $(params.oas-filepath)
+      runAfter:
+        - upload-to-apicurio
+      taskRef:
+        kind: Task
+        name: copy-file
+      workspaces:
+        - name: source
+          workspace: workspace
+    - name: create-branch
+      params:
+        - name: artifact
+          value: $(tasks.upload-to-apicurio.results.artifact)
+      runAfter:
+        - copy-oas-spec
+      taskRef:
+        kind: Task
+        name: create-branch
+      workspaces:
+        - name: source
+          workspace: workspace
+  workspaces:
+    - name: workspace
