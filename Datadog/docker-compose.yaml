@@ -3,14 +3,17 @@ services:
   dd-agent:
     image: gcr.io/datadoghq/agent:7
     container_name: dd-agent
-    restart: unless-stopped
+    # restart: unless-stopped
     ports:
       - "4317:4317" # Expose gRPC port for OTLP traffic
       - "4318:4318" # Expose HTTP port for OTLP traffic
+    # secrets:
+    #   - datadog_api_key
     volumes:
-      - ./mounts/conf.d/openmetrics.d/conf.yaml:/etc/datadog-agent/conf.d/openmetrics.d/conf.yaml
+      - ./mounts/conf.d/openmetrics.d/conf.yaml:/tmp/conf.yaml:z
+      - ./mounts/pre-start.sh:/etc/pre-start.sh:z
+    entrypoint: /etc/pre-start.sh
     environment:
-      DD_API_KEY: 12a329ce85507b5280e9474f33d52cd2
       DD_SITE: "us5.datadoghq.com"
       DD_DOGSTATSD_NON_LOCAL_TRAFFIC: true
       DD_HOSTNAME: dd-agent
@@ -19,8 +22,13 @@ services:
       DD_OTLP_CONFIG_LOGS_ENABLED: true
       DD_LOGS_ENABLED: true
       DD_ENV: "live"
-    networks:
-      - master
-networks:
-  master:
-    external: true
+#     networks:
+#       - master
+# networks:
+#   master:
+#     external: true
+# secrets:
+#   datadog_api_key:
+#     external: true
+
+# printf "%s" "secret" | podman secret create secret -

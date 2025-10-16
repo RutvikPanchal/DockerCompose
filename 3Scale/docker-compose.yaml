@@ -1,0 +1,24 @@
+version: '3'
+services:
+  apicast:
+    image: quay.io/3scale/apicast:latest
+    container_name: apicast
+    ports:
+      - "8080:8080"   # Public endpoint (clients send requests here)
+      - "8081:8081"   # Management API (optional)
+    volumes:
+      - ./mounts/config.json:/opt/app/config.json:ro
+    environment:
+      THREESCALE_PORTAL_ENDPOINT: "file:///opt/app/config.json"
+    networks:
+    - master
+  echo-api:
+    image: ealen/echo-server:latest
+    container_name: echo-api
+    ports:
+      - "9090:8080"
+    networks:
+    - master
+networks:
+  master:
+    external: true

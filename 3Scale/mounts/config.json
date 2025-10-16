@@ -1,0 +1,17 @@
+{
+  "services": [
+    {
+      "id": "1",
+      "backend_version": 1,
+      "backend_authentication_type": "service_token",
+      "backend_authentication_value": "dummy",
+      "proxy": {
+        "hosts": ["localhost"],
+        "api_backend": "http://echo-api:8080",
+        "policy_chain": [
+          { "name": "apicast.policy.apicast" }
+        ]
+      }
+    }
+  ]
+}
