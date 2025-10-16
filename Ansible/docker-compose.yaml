@@ -1,0 +1,68 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: awx
+      POSTGRES_USER: awx
+      POSTGRES_PASSWORD: awxpass
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U awx"]
+      interval: 10s
+      retries: 5
+    networks:
+    - master
+
+  redis:
+    image: redis:6
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+    networks:
+    - master
+
+  awx_web:
+    image: quay.io/ansible/awx:24.6.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SECRET_KEY: "SOME_RANDOM_SECRET_KEY"
+      DATABASE_USER: awx
+      DATABASE_NAME: awx
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_PASSWORD: awxpass
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+    networks:
+    - master
+
+  awx_task:
+    image: quay.io/ansible/awx:24.6.0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      SECRET_KEY: "SOME_RANDOM_SECRET_KEY"
+      DATABASE_USER: awx
+      DATABASE_NAME: awx
+      DATABASE_HOST: postgres
+      DATABASE_PORT: "5432"
+      DATABASE_PASSWORD: awxpass
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+    networks:
+    - master
+networks:
+  master:
+    external: true
